@@ -1,0 +1,55 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class P03Numbers {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        List<Integer> numbers = Arrays.stream(scanner.nextLine().split(" ")).map(Integer::parseInt).collect(Collectors.toList());
+
+        double sum = 0;
+        for (int num : numbers) {
+            sum += num;
+
+        }
+        double avgSumm = sum / numbers.size();
+
+        List<Integer> numList = new ArrayList<>();
+        for (int number : numbers) {
+            if (number > avgSumm) {
+                numList.add(number);
+            }
+
+
+        }
+        Collections.sort(numList);
+        Collections.reverse(numList);
+
+        if (numList.size() > 0) {
+            if (numList.size() < 5) {
+                System.out.println(numList.toString()
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace(",", "")
+                );
+
+            } else {
+                int count = 0;
+                for (int num : numList) {
+                    System.out.print(num + " ");
+                    count++;
+
+                    if (count == 5) {
+                        break;
+                    }
+
+                }
+
+            }
+
+        } else {
+            System.out.println("No");
+        }
+
+    }
+}
