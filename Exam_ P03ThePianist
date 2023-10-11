@@ -1,0 +1,79 @@
+import java.util.*;
+
+public class P03ThePianist {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int piecesCount = Integer.parseInt(scanner.nextLine());
+
+        Map<String, List<String>> piecesMap = new LinkedHashMap<>();
+
+        for (int piece = 1; piece <= piecesCount; piece++) {
+            String currentPiece = scanner.nextLine();
+            String[] command = currentPiece.split("\\|");
+            //"{piece}|{composer}|{key}".
+            String pieceName = command[0];
+            String composer = command[1];
+            String ton = command[2];
+
+            List<String> piecesInfo = new ArrayList<>();
+            piecesInfo.add(composer);
+            piecesInfo.add(ton);
+            piecesMap.put(pieceName, piecesInfo);
+
+        }
+        String command = scanner.nextLine();
+        while (!command.equals("Stop")) {
+
+            if (command.contains("Add")) {
+                //"Add|{piece}|{composer}|{key}":
+                String[] commands = command.split("\\|");
+                String addPiece = commands[1];
+                String addComposer = commands[2];
+                String addKey = commands[3];
+
+                if (!piecesMap.containsKey(addPiece)) {
+                    List<String> piecesInfo = new ArrayList<>();
+                    piecesInfo.add(addComposer);
+                    piecesInfo.add(addKey);
+                    piecesMap.put(addPiece, piecesInfo);
+                    System.out.printf("%s by %s in %s added to the collection!%n", addPiece, addComposer, addKey);
+                } else {
+                    System.out.println(addPiece +" is already in the collection!");
+                }
+
+            } else if (command.contains("Remove")) {
+                //"Remove|{piece}":
+                String removePieces = command.split("\\|")[1];
+                if (piecesMap.containsKey(removePieces)) {
+                    piecesMap.remove(removePieces);
+                    System.out.printf("Successfully removed %s!%n", removePieces);
+                } else {
+                    System.out.printf("Invalid operation! %s does not exist in the collection.%n", removePieces);
+                }
+
+            } else if (command.contains("ChangeKey")) {
+                //"ChangeKey|{piece}|{new key}":
+                String pieces = command.split("\\|")[1];
+                String newTon = command.split("\\|")[2];
+
+                if (piecesMap.containsKey(pieces)) {
+                    List<String> pieceInfo = piecesMap.get(pieces);
+                    pieceInfo.set(1, newTon);
+                    piecesMap.put(pieces, pieceInfo);
+                    System.out.printf("Changed the key of %s to %s!%n", pieces, newTon);
+                }else {
+                    System.out.printf("Invalid operation! %s does not exist in the collection.%n", pieces);
+                }
+
+            }
+
+
+            command = scanner.nextLine();
+        }
+ piecesMap.entrySet()
+                .forEach(entry ->
+                    System.out.printf("%s -> Composer: %s, Key: %s%n",
+                                entry.getKey(), entry.getValue().get(0), entry.getValue().get(1)));
+
+    }
+}
