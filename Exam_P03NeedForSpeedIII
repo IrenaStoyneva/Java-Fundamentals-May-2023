@@ -1,0 +1,86 @@
+import java.util.*;
+
+public class P03NeedForSpeedIII {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int numberOfCars = Integer.parseInt(scanner.nextLine());
+
+        Map<String, List<Integer>> carsMap = new LinkedHashMap<>();
+        List<Integer> carsList = new ArrayList<>();
+
+        for (int i = 1; i <= numberOfCars ; i++) {
+            String currentCommand = scanner.nextLine();
+            //"{car}|{mileage}|{fuel}
+            String modelCar = currentCommand.split("\\|")[0];
+            int mileage = Integer.parseInt(currentCommand.split("\\|")[1]);
+            int fuel = Integer.parseInt(currentCommand.split("\\|")[2]);
+
+            carsMap.putIfAbsent(modelCar, new ArrayList<>());
+            carsMap.get(modelCar).add(0, mileage);
+            carsMap.get(modelCar).add(1, fuel);
+        }
+        String input = scanner.nextLine();
+        while (!input.equals("Stop")){
+          
+            if (input.contains("Drive")){
+                //"Drive : {car} : {distance} : {fuel}":
+                String [] data = input.split(" : ");
+                String car = data[1];
+                int distance = Integer.parseInt(data[2]);
+                int consumedFuel = Integer.parseInt(data[3]);
+
+                int currentFuel = carsMap.get(car).get(1);
+                int currentMileage = carsMap.get(car).get(0);
+
+                if (currentFuel >= consumedFuel){
+
+                    carsMap.get(car).set(0, currentMileage + distance);
+                    carsMap.get(car).set(1, currentFuel - consumedFuel);
+                    System.out.printf("%s driven for %d kilometers. %d liters of fuel consumed.%n", car, distance, consumedFuel);
+                }else{
+                    // increase its mileage with the given distance, decrease its fuel with the given fuel, and print
+                    System.out.println("Not enough fuel to make that ride");
+                }
+                if (carsMap.get(car).get(0) >= 100000){
+                    System.out.printf("Time to sell the %s!%n", car);
+                    carsMap.remove(car);
+                }
+
+            } else if (input.contains("Refuel")) {
+             //"Refuel : {car} : {fuel}":
+                String car = input.split(" : ")[1];
+                int fuel = Integer.parseInt(input.split(" : ")[2]);
+
+                int currentFuel = carsMap.get(car).get(1);
+                if (currentFuel + fuel > 75){
+                    carsMap.get(car).set(1, 75);
+                    System.out.printf("%s refueled with %d liters%n", car, 75 - currentFuel);
+
+                }else{
+                    carsMap.get(car).set(1, currentFuel + fuel);
+                        System.out.printf("%s refueled with %d liters%n", car, fuel);
+                }
+                
+            } else if (input.contains("Revert")) {
+                //"Revert : {car} : {kilometers}":
+                String car = input.split(" : ")[1];
+                int km = Integer.parseInt(input.split(" : ")[2]);
+                int currentKm = carsMap.get(car).get(0);
+
+                int decreasedKm = currentKm - km;
+
+                if (decreasedKm < 10000) {
+                    decreasedKm = 10000;
+
+                } else {
+                    System.out.printf("%s mileage decreased by %d kilometers%n", car, km);
+                }
+                carsMap.get(car).set(0, decreasedKm);
+
+            }
+            input = scanner.nextLine();
+        }
+        carsMap.entrySet().forEach(entry -> System.out.printf("%s -> Mileage: %d kms, Fuel in the tank: %d lt.%n", entry.getKey(), entry.getValue().get(0), entry.getValue().get(1) ));
+    }
+}
