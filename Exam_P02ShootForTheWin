@@ -1,0 +1,43 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class P02ShootForTheWin {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int [] targets = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray(); // mishenite po koito se streelq
+        String inputIndex = scanner.nextLine();
+
+        int count = 0;
+        while (!inputIndex.equals("End")){
+
+             int shot = Integer.parseInt(inputIndex);
+             // elementyt na tozi indeks shte bude ucelenata mishenata
+             if (shot <= targets.length - 1 && shot >= 0){
+                 int shortTarget = targets[shot];
+             for (int i = 0; i < targets.length ; i++) {
+                 int currentIndex = targets[i];
+                 if (currentIndex != -1 && shot!= i) {
+                     if (currentIndex > shortTarget) {
+                         currentIndex -= shortTarget;
+                     }else {
+                         currentIndex += shortTarget;
+                     }
+                 }
+                 targets[i] = currentIndex;
+             }
+
+             targets[shot] = -1;
+             count++;
+         }
+
+
+            inputIndex = scanner.nextLine();
+        }
+        System.out.print("Shot targets: " + count + " -> ");
+        for (int target : targets) {
+            System.out.print(target + " ");
+
+        }
+    }
+}
