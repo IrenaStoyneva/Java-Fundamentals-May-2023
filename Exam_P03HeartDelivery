@@ -1,0 +1,54 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class P03HeartDelivery {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int[] houses = Arrays.stream(scanner.nextLine().split("@"))
+                .mapToInt(Integer::parseInt).toArray(); // nujnite surca za vseki dom
+        int currantIndex = 0;
+        String command = scanner.nextLine();
+
+        while (!command.equals("Love!")) {
+            String[] jump = command.split(" ");
+            int jumpLength = Integer.parseInt(jump[1]);
+
+
+            currantIndex += jumpLength;
+
+            if (currantIndex > houses.length - 1){
+                currantIndex = 0;
+            }
+
+            if (houses[currantIndex] != 0) {
+                houses[currantIndex] -= 2;
+
+                if (houses[currantIndex] == 0) {
+                    System.out.printf("Place %d has Valentine's day.%n", currantIndex);
+                }
+            } else {
+                System.out.printf("Place %d already had Valentine's day.%n", currantIndex);
+
+            }
+
+            command = scanner.nextLine();
+        }
+        System.out.printf("Cupid's last position was %d.%n", currantIndex);
+
+        boolean isCelebrate = true;
+        int countHouse = 0;
+        for (int house : houses) {
+            if (house != 0){
+                isCelebrate = false;
+                countHouse++;
+            }
+
+        }
+        if (isCelebrate){
+            System.out.printf("Mission was successful.%n");
+        }else{
+            System.out.printf("Cupid has failed %d places.", countHouse);
+        }
+    }
+}
