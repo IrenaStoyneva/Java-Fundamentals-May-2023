@@ -1,0 +1,52 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class P3Inventory {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> journalList = Arrays.stream(scanner.nextLine().split(", ")).collect(Collectors.toList());
+
+        String command = scanner.nextLine();
+        while (!command.equals("Craft!")){
+            String currentCommand = command.split(" - ")[0];
+            switch (currentCommand){
+                case "Collect":
+                    String addItem = command.split(" - ")[1];
+                    if (!journalList.contains(addItem)){
+                        journalList.add(addItem);
+                    }
+                    break;
+                case "Drop":
+                    String removeItem = command.split(" - ")[1];
+                    journalList.remove(removeItem);
+                    break;
+                case "Combine Items":
+                    String combineItems = command.split(" - ")[1];
+                    String oldItem = combineItems.split(":")[0];
+                    String newItem = combineItems.split(":")[1];
+
+                    if (journalList.contains(oldItem)){
+                        int oldIndex = journalList.indexOf(oldItem);
+                        journalList.add(oldIndex + 1, newItem);
+                    }
+                    break;
+                case "Renew":
+                    String renewItem = command.split(" - ")[1];
+                    if (journalList.contains(renewItem)) {
+                        int indexItem = journalList.indexOf(renewItem);
+                        journalList.remove(indexItem);
+                        journalList.add(renewItem);
+                    }
+                    break;
+
+            }
+
+
+            command = scanner.nextLine();
+        }
+        System.out.println(String.join(", ", journalList));
+    }
+}
