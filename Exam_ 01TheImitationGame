@@ -1,0 +1,44 @@
+import java.util.Scanner;
+
+public class P01TheImitationGame {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String encryptedMessage = scanner.nextLine();
+        String command = scanner.nextLine();
+
+        StringBuilder modifyMessages = new StringBuilder(encryptedMessage);
+        while (!command.contains("Decode")){
+
+            if (command.contains("Move")){
+
+                int moveLetters = Integer.parseInt(command.split("\\|")[1]);
+               String firstLetters = modifyMessages.substring(0,moveLetters);
+               modifyMessages.delete(0, moveLetters);
+               modifyMessages.append(firstLetters);
+
+            } else if (command.contains("Insert")) {
+             //"Insert {index} {value}": Inserts the given value before the given index in the string
+                int insertIndex = Integer.parseInt(command.split("\\|")[1]);
+                String insertValue = command.split("\\|")[2];
+               modifyMessages.insert(insertIndex , insertValue);
+
+            } else if (command.contains("ChangeAll")) {
+                //"ChangeAll {substring} {replacement}":
+                // Changes all occurrences of the given substring with the replacement text
+                String substring = command.split("\\|")[1];
+                String replacement = command.split("\\|")[2];
+
+                String changeStringBuilder = modifyMessages.toString();
+                changeStringBuilder = changeStringBuilder.replace(substring, replacement);
+                modifyMessages = new StringBuilder(changeStringBuilder);
+
+
+            }
+
+
+            command = scanner.nextLine();
+        }
+        System.out.println("The decrypted message is: " + modifyMessages);
+    }
+}
