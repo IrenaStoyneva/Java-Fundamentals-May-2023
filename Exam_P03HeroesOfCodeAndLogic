@@ -1,0 +1,111 @@
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class P03HeroesOfCodeAndLogic {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int numberHeroes = Integer.parseInt(scanner.nextLine());
+        Map<String, Integer> hitMap = new LinkedHashMap<>();
+        Map<String, Integer> manaMap = new LinkedHashMap<>();
+
+        for (int i = 1; i <= numberHeroes ; i++) {
+            String input = scanner.nextLine();
+            //"{hero name} {HP} {MP}"
+            String [] data = input.split("\\s+");
+            String heroName = data[0];
+            int hitPoints = Integer.parseInt(data[1]);
+            int manaPoints = Integer.parseInt(data[2]);
+
+            if (hitPoints <= 100){
+                hitMap.put(heroName, hitPoints);
+            }
+            if (manaPoints <= 200){
+                manaMap.put(heroName, manaPoints);
+            }
+
+        }
+        String command = scanner.nextLine();
+
+        while (!command.equals("End")){
+            if (command.startsWith("CastSpell")){
+                //"CastSpell – {hero name} – {MP needed} – {spell name}"
+                String heroName = command.split(" - ")[1];
+                int mpNeeded = Integer.parseInt(command.split(" - ")[2]);
+                String spellName = command.split(" - ")[3];
+
+                int currentMP = manaMap.get(heroName);
+
+                if (currentMP >= mpNeeded){
+                    currentMP = currentMP - mpNeeded;
+                    manaMap.put(heroName, currentMP);
+
+                    System.out.printf("%s has successfully cast %s and now has %d MP!%n", heroName, spellName, currentMP);
+                }else {
+                    System.out.printf("%s does not have enough MP to cast %s!%n", heroName, spellName);
+                }
+
+            } else if (command.startsWith("TakeDamage")) {
+                //"TakeDamage – {hero name} – {damage} – {attacker}"
+                String heroName = command.split(" - ")[1];
+                int damage = Integer.parseInt(command.split(" - ")[2]);
+                String attacker = command.split(" - ")[3];
+
+                int currentHp = hitMap.get(heroName);
+                currentHp -= damage;
+
+                if (currentHp > 0){
+                    System.out.printf("%s was hit for %d HP by %s and now has %d HP left!%n", heroName, damage, attacker, currentHp);
+                    hitMap.put(heroName, currentHp);
+                }else {
+                    System.out.printf("%s has been killed by %s!%n", heroName, attacker);
+                    hitMap.remove(heroName);
+                    manaMap.remove(heroName);
+                }
+
+            } else if (command.startsWith("Recharge")) {
+                //"Recharge – {hero name} – {amount}"
+                String heroName = command.split(" - ")[1];
+                int amount = Integer.parseInt(command.split(" - ")[2]);
+
+                int currentMP = manaMap.get(heroName);
+                currentMP += amount;
+
+                if (currentMP > 200){
+                    currentMP = 200;
+                }
+
+                System.out.printf("%s recharged for %d MP!%n", heroName, currentMP - manaMap.get(heroName));
+                manaMap.put(heroName, currentMP);
+
+            } else if (command.startsWith("Heal")) {
+                String heroName = command.split(" - ")[1];
+                int amount = Integer.parseInt(command.split(" - ")[2]);
+
+                int currentHP = hitMap.get(heroName);
+                currentHP += amount;
+
+                if ( currentHP > 100){
+                    currentHP = 100;
+                }
+
+                System.out.printf("%s healed for %d HP!%n", heroName, currentHP - hitMap.get(heroName));
+                hitMap.put(heroName, currentHP);
+            }
+
+            command = scanner.nextLine();
+        }
+        //"{hero name}
+        //
+        //HP: {current HP}
+        //
+        //MP: {current MP}"
+        hitMap.entrySet().forEach( entry -> {
+            String heroName = entry.getKey();
+            System.out.println(heroName);
+            System.out.println("  HP: " + entry.getValue());
+            System.out.println("  MP: " + manaMap.get(heroName));
+        });
+    }
+}
