@@ -1,0 +1,55 @@
+import java.util.Scanner;
+
+public class DungeonGame {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] rooms = scanner.nextLine().split("\\|");
+
+        int health = 100;
+        int bitcoins = 0;
+
+        int currHealth = 0;
+        int tempHealth = 0;
+        boolean notDead = true;
+        for (int i = 0; i < rooms.length; i++) {
+            int currBitcoins = 0;
+            String command = rooms[i];
+            String[] splitted = command.split(" ");
+            if (splitted[0].equals("potion")) {
+                currHealth = health;
+                tempHealth = health;
+                currHealth += Integer.parseInt(splitted[1]);
+                if (currHealth <= 100) {
+                    health += Integer.parseInt(splitted[1]);
+                    System.out.println("You healed for " + splitted[1] + " hp.");
+                    System.out.println("Current health: " + health + " hp.");
+                } else if (currHealth > 100) {
+                    int diff = 100 - tempHealth;
+                    health = 100;
+                    System.out.println("You healed for " + diff + " hp.");
+                    System.out.println("Current health: " + health + " hp.");
+                }
+            } else if (splitted[0].equals("chest")) {
+                bitcoins += Integer.parseInt(splitted[1]);
+                currBitcoins += Integer.parseInt(splitted[1]);
+                System.out.println("You found " + currBitcoins + " bitcoins.");
+            } else {
+                int attack = Integer.parseInt(splitted[1]);
+                health -= attack;
+                if (health <= 0) {
+                    System.out.println("You died! Killed by " + splitted[0] + ".");
+                    System.out.println("Best room: " + (i + 1));
+                    notDead = false;
+                    break;
+                } else {
+                    System.out.println("You slayed " + splitted[0] + ".");
+                }
+            }
+        }
+        if (notDead) {
+            System.out.println("You've made it!");
+            System.out.println("Bitcoins: " + bitcoins);
+            System.out.println("Health: " + health);
+        }
+    }
+}
