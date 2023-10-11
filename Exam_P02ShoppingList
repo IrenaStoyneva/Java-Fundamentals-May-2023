@@ -1,0 +1,52 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class P02ShoppingList {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> itemsList = Arrays.stream(scanner.nextLine().split("!")).collect(Collectors.toList());
+
+        String commands = scanner.nextLine();
+        while (!commands.equals("Go Shopping!")) {
+            String commList = commands.split(" ")[0];
+
+            switch (commList) {
+                case "Urgent":
+                    String com = commands.split(" ")[1];
+                    if (!itemsList.contains(com)) {
+                        itemsList.add(0, com);
+                    }
+                    break;
+                case "Unnecessary":
+                    String itemRemove = commands.split(" ")[1];
+                    if (itemsList.contains(itemRemove)) {
+                        itemsList.remove(itemRemove);
+                    }
+                    break;
+                case "Correct":
+                    String oldItem = (commands.split(" ")[1]);
+                    String newItem = (commands.split(" ")[2]);
+                    int index = itemsList.indexOf(oldItem);
+                    if (index != -1) {
+                        itemsList.set(index, newItem);
+                    }
+                    break;
+                case "Rearrange":
+                    String addRemoveItem = commands.split(" ")[1];
+                    int indexx = itemsList.indexOf(addRemoveItem);
+                    if (indexx != -1) {
+                        itemsList.remove(indexx);
+                        itemsList.add(addRemoveItem);
+                    }
+                    break;
+            }
+
+            commands = scanner.nextLine();
+        }
+
+        System.out.println(String.join(", ", itemsList));
+    }
+}
