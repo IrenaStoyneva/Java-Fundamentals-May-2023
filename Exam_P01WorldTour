@@ -1,0 +1,50 @@
+import java.util.List;
+import java.util.Scanner;
+
+public class P01WorldTour {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String stop = scanner.nextLine();
+
+         String input = scanner.nextLine();
+         StringBuilder stopsBuilder = new StringBuilder(stop);
+        while (!input.equals("Travel")){
+            //"Add Stop:{index}:{string}":
+            if (input.contains("Add Stop")){
+                int index = Integer.parseInt(input.split(":")[1]);
+                String stopName = input.split(":")[2];
+                if (index <= stopsBuilder.length()-1 && index >= 0 ){
+                 stopsBuilder.insert(index, stopName);
+
+                }
+
+            } else if (input.contains("Remove Stop")) {
+                //"Remove Stop:{start_index}:{end_index}":
+                int startIndex = Integer.parseInt(input.split(":")[1]);
+                int endIndex = Integer.parseInt(input.split(":")[2]);
+                if (startIndex <= stopsBuilder.length()-1 && startIndex >= 0 ){
+                    if (endIndex <= stopsBuilder.length()-1 && endIndex >= 0 ){
+                        stopsBuilder.delete(startIndex,endIndex + 1);
+                    }
+                }
+                
+            } else if (input.contains("Switch")) {
+                //"Switch:{old_string}:{new_string}":
+                String oldString = input.split(":")[1];
+                String newString = input.split(":")[2];
+
+                if (stopsBuilder.toString().contains(oldString)){
+                   String updatedBuilder = stopsBuilder.toString().replace(oldString, newString);
+                   stopsBuilder = new StringBuilder(updatedBuilder);
+
+                }
+
+            }
+
+            System.out.println(stopsBuilder);
+            input = scanner.nextLine();
+
+        }
+        System.out.println("Ready for world tour! Planned stops: " + stopsBuilder);
+    }
+}
