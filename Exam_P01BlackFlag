@@ -1,0 +1,36 @@
+import java.util.Scanner;
+
+public class P01BlackFlag {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int daysOfPlunder = Integer.parseInt(scanner.nextLine());
+        int plunderPerDay = Integer.parseInt(scanner.nextLine());
+        double expectedPlunder = Integer.parseInt(scanner.nextLine());
+
+        double finalPlunder = 0;
+        for (int day = 1; day <= daysOfPlunder ; day++) {
+            finalPlunder += plunderPerDay;
+
+         if (day % 3 == 0){
+
+             double extraPlunder = 0.5 * plunderPerDay;
+
+            finalPlunder+=extraPlunder;
+         }
+         if (day % 5 == 0){
+             finalPlunder = finalPlunder - 0.3 * finalPlunder;
+
+         }
+
+        }
+        if (finalPlunder >= expectedPlunder){
+            System.out.printf("Ahoy! %.2f plunder gained.", finalPlunder);
+        }else {
+            double percent = (finalPlunder / expectedPlunder) * 100;
+            System.out.printf("Collected only %.2f%% of the plunder.", percent);
+        }
+
+    }
+
+}
